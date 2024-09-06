@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Data Input and Bar Graph</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .graph-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 300px;
+            margin-top: 20px;
+        }
+        .bar {
+            width: 100px;
+            margin: 0 10px;
+            text-align: center;
+        }
+        .bar div {
+            width: 100%;
+            background-color: #4CAF50;
+            margin-bottom: 5px;
+        }
+        .bar span {
+            display: block;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Product Data Input</h1>
+
+        <div class="form-container">
+            <input type="text" id="product-name" placeholder="Product Name">
+            <input type="number" id="product-price" placeholder="Product Price" min="0">
+            <input type="number" id="product-rating" placeholder="Product Rating" min="0" max="5">
+            <button onclick="addProduct()">Add Product</button>
+        </div>
+
+        <div>
+            <button onclick="sortProductsByPrice()">Sort by Price</button>
+            <button onclick="sortProductsByRating()">Sort by Rating</button>
+        </div>
+
+        <div class="graph-container" id="graph-container">
+            <!-- Graph bars will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Product data array
+        let products = [];
+
+        // Add a new product
+        function addProduct() {
+            const name = document.getElementById('product-name').value;
+            const price = parseFloat(document.getElementById('product-price').value);
+            const rating = parseFloat(document.getElementById('product-rating').value);
+
+            // Validate inputs
+            if (name && price >= 0 && rating >= 0 && rating <= 5) {
+                // Add product to array
+                products.push({ name, price, rating });
+                // Clear input fields
+                document.getElementById('product-name').value = '';
+                document.getElementById('product-price').value = '';
+                document.getElementById('product-rating').value = '';
+                // Update graph
+                updateGraph();
+            } else {
+                alert("Please enter valid product details.");
+            }
+        }
+
+        // Update the graph
+        function updateGraph() {
+            const graphContainer = document.getElementById('graph-container');
+            graphContainer.innerHTML = '';  // Clear current graph
+
+            products.forEach(product => {
+                const bar = document.createElement('div');
+                bar.classList.add('bar');
+                const priceBar = document.createElement('div');
+                priceBar.style.height = product.price * 3 + 'px';  // Adjust scale of price bar
+                const ratingBar = document.createElement('div');
+                ratingBar.style.height = product.rating * 60 + 'px';  // Adjust scale of rating bar
+                ratingBar.style.backgroundColor = '#f39c12';  // Different color for rating
+
+                const priceLabel = document.createElement('span');
+                priceLabel.textContent = `$${product.price.toFixed(2)}`;
+                const ratingLabel = document.createElement('span');
+                ratingLabel.textContent = `Rating: ${product.rating}`;
+
+                bar.appendChild(priceBar);
+                bar.appendChild(ratingBar);
+                bar.appendChild(priceLabel);
+                bar.appendChild(ratingLabel);
+                graphContainer.appendChild(bar);
+            });
+        }
+
+        // Sort products by price
+        function sortProductsByPrice() {
+            products.sort((a, b) => a.price - b.price);
+            updateGraph();
+        }
+
+        // Sort products by rating
+        function sortProductsByRating() {
+            products.sort((a, b) => b.rating - a.rating);
+            updateGraph();
+        }
+    </script>
+
+</body>
+</html>
