@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .shopping-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .shopping-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .shopping-list li span {
+            flex-grow: 1;
+            text-align: left;
+        }
+        .shopping-list button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Shopping List</h1>
+        <div>
+            <input type="text" id="item-name" placeholder="Item Name">
+            <input type="number" id="item-quantity" placeholder="Quantity" min="1">
+            <button onclick="addItem()">Add Item</button>
+        </div>
+
+        <ul id="shopping-list" class="shopping-list">
+            <!-- List items will be dynamically added here -->
+        </ul>
+    </div>
+
+    <script>
+        // Add a new item to the shopping list
+        function addItem() {
+            const itemName = document.getElementById('item-name').value;
+            const itemQuantity = document.getElementById('item-quantity').value;
+
+            // Validate inputs
+            if (itemName.trim() !== '' && itemQuantity > 0) {
+                const list = document.getElementById('shopping-list');
+
+                // Create a new list item
+                const listItem = document.createElement('li');
+
+                // Create a span to hold the item name and quantity
+                const itemText = document.createElement('span');
+                itemText.textContent = `${itemName} - Quantity: ${itemQuantity}`;
+                listItem.appendChild(itemText);
+
+                // Create Edit and Delete buttons
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.onclick = () => editItem(listItem, itemText);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => list.removeChild(listItem);
+
+                // Append buttons to the list item
+                listItem.appendChild(editButton);
+                listItem.appendChild(deleteButton);
+
+                // Append the list item to the shopping list
+                list.appendChild(listItem);
+
+                // Clear the input fields
+                document.getElementById('item-name').value = '';
+                document.getElementById('item-quantity').value = '';
+            } else {
+                alert("Please enter a valid item name and quantity.");
+            }
+        }
+
+        // Edit an existing item in the shopping list
+        function editItem(listItem, itemText) {
+            const newItemName = prompt("Edit item name:", itemText.textContent.split(' - ')[0]);
+            const newItemQuantity = prompt("Edit quantity:", itemText.textContent.split(' - Quantity: ')[1]);
+
+            // Update the item text with new values if they are valid
+            if (newItemName && newItemQuantity > 0) {
+                itemText.textContent = `${newItemName} - Quantity: ${newItemQuantity}`;
+            } else {
+                alert("Please enter valid item details.");
+            }
+        }
+    </script>
+
+</body>
+</html>
